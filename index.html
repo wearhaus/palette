@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+        <!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->
+        <script src="js/jquery.knob.js"></script>
+        <script>
+            $(function($) {
+				var	colors = ["fff", "#0ff", "#0f0", "#ff0", "#fa0", "#f33"],
+					bodybg = "#222",
+					start = 1;
+					
+				var	sections = colors.length,
+					arcAngle = 360/sections,
+					fillBorder = 2;
+					
+					
+				function LED(color) {
+					console.log(colors[color]);
+					
+				}
+
+				
+				$("input.wheel")
+				.attr("value", start)
+				.knob({
+					width:			240,
+					height:			240,
+					thickness:		.07,
+					cursor:			30,
+					angleOffset:	30,
+					min : 			0,
+					max : 			6,
+					bgColor:		bodybg,
+					fgColor:		colors[start],
+					stopper: 		false,
+					displayInput:	false,
+					
+					//Handler functions for click/scroll - will call transition function
+					change : function (v) {
+						this.o.fgColor = colors[v];
+						LED(v);
+					},
+					
+					release : function (v) {
+						this.o.fgColor = colors[this.cv];
+						this._draw();
+						LED(this.cv);
+					}
+				});
+
+
+                $("input.color")
+                .each(
+					function(i, e) {
+						$(e).attr('data-bgColor', colors[$(e).data('index')]);
+						$(e).attr('data-angleOffset', arcAngle*parseInt($(e).data('index')));
+					})
+                .knob({
+					width:			200,
+					height:			200,
+					thickness:		.45,
+					angleArc:		arcAngle,
+					displayInput:	false,
+					readonly:		true,
+				});
+                
+                
+                $("input.fill")
+                .each(
+					function(i, e) {
+						$(e).attr('data-angleOffset', arcAngle*parseInt($(e).data('index')) + fillBorder);
+					})
+				.knob({
+					width:			196,
+					height:			196,
+					thickness:		.42,
+					angleArc:		arcAngle - 2*fillBorder,
+					bgColor:		bodybg,
+					displayInput:	false,
+					readonly:		true,
+				});
+				
+				$("input.blackwhite-checkbox")
+				.change(function() {
+					console.log($(this).is(":checked") ? "white" : "black");
+				});
+				               
+            });
+        </script>
+        <style>
+            body {
+              background-color: #222;
+            }
+            
+            .blackwhite {
+				position: relative; width: 165px;
+				margin: auto;
+				-webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+			}
+
+			.blackwhite-checkbox {
+				display: none;
+			}
+
+			.blackwhite-label {
+				display: block; overflow: hidden; cursor: pointer;
+				border: 2px solid #999999; border-radius: 50px;
+			}
+
+			.blackwhite-inner {
+				width: 200%; margin-left: -100%;
+				-moz-transition: margin 0.3s ease-in 0s; -webkit-transition: margin 0.3s ease-in 0s;
+				-o-transition: margin 0.3s ease-in 0s; transition: margin 0.3s ease-in 0s;
+			}
+
+			.blackwhite-inner:before, .blackwhite-inner:after {
+				float: left; width: 50%; height: 40px; padding: 0; line-height: 40px;
+				font-size: 27px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+				-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+			}
+
+			.blackwhite-inner:before {
+				content: "WHITE";
+				padding-left: 14px;
+				background-color: #999999; color: #fff;
+			}
+
+			.blackwhite-inner:after {
+				content: "BLACK";
+				padding-right: 14px;
+				background-color: #999999; color: #444444;
+				text-align: right;
+			}
+			
+			.blackwhite-inner:hover {
+				text-color: #444444;
+			}
+
+			.blackwhite-switch {
+				width: 40px; margin: 0px;
+				background: #444444;
+				border: 2px solid #999999; border-radius: 50px;
+				position: absolute; top: 0; bottom: 0; right: 121px;
+				-moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
+				-o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s; 
+			}
+
+			.blackwhite-checkbox:checked + .blackwhite-label .blackwhite-inner {
+				margin-left: 0;
+			}
+
+			.blackwhite-checkbox:checked + .blackwhite-label .blackwhite-switch {
+				right: 0px; 
+				background-color: #eee; 
+			}
+			
+			.color-container {
+				position: absolute;
+				top: 60px;
+				left: 60px;
+			}
+			
+			.fill-container {
+				position: absolute;
+				top: 62px;
+				left: 62px;
+			}
+			
+			.wheel-container {
+				position: absolute;
+				top: 40px;
+				left: 40px;
+			}
+			
+			.palette-container {
+				float: left;
+				width: 320px;
+			}
+			
+			.palette {
+				position: relative;
+				width: 320px;
+				height: 300px;
+				margin: auto;
+			}
+			
+			.personalize-container {
+				margin-top: 40px;
+				left: 20%;
+				width: 900px;
+				height: 560px;
+				position: absolute;
+			}
+			
+			.headphone-stage {
+				width: 400px;
+				height: 100%;
+				float: left;
+				margin-right: 50px;
+			}
+        </style>
+    </head>
+    <body>
+		<div class="personalize-container">
+			<div class="headphone-stage">
+				<div style="width:300px;">	</div>
+			</div>
+			<div class="palette-container">
+				<div class="palette">	
+					<div class="color-container">
+						<input class="color" data-index=0>
+					</div>
+					<div class="color-container">
+						<input class="color" data-index=1>
+					</div>
+					<div class="color-container">
+						<input class="color" data-index=2>
+					</div>
+					<div class="color-container">
+						<input class="color" data-index=3>
+					</div>
+					<div class="color-container">
+						<input class="color" data-index=4>
+					</div>
+					<div class="color-container">
+						<input class="color" data-index=5>
+					</div>
+					<div class="fill-container">
+						<input class="fill" data-index=0>
+					</div>
+					<div class="fill-container">
+						<input class="fill" data-index=1>
+					</div>
+					<div class="fill-container">
+						<input class="fill" data-index=2>
+					</div>
+					<div class="fill-container">
+						<input class="fill" data-index=3>
+					</div>
+					<div class="fill-container">
+						<input class="fill" data-index=4>
+					</div>
+					<div class="fill-container">
+						<input class="fill" data-index=5>
+					</div>
+					<div class="wheel-container">
+						<input class="wheel">
+					</div>
+				</div>
+				<div class="blackwhite">
+						<input type="checkbox" name="blackwhite" class="blackwhite-checkbox" id="basecolor">
+						<label class="blackwhite-label" for="basecolor">
+							<div class="blackwhite-inner"></div>
+							<div class="blackwhite-switch"></div>
+						</label>
+					</div>
+			</div>
+		</div>
+    </body>
+</html>
